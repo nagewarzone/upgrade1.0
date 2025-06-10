@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>N-AGE WARZONE UPGRADE</title>
+  <style>
+  body { font-family: sans-serif; background: #fff4ee; padding: 20px; }
+  .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+  .tabs button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; background: #ddd; }
+  .tabs button.active { background: #007BFF; color: white; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  input, button[type="submit"] { padding: 10px; width: 100%; margin-bottom: 10px; }
+  button[type="submit"] { background: #007BFF; color: white; border: none; cursor: pointer; }
+  p { white-space: pre-line; }
+  #logoutBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 12px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none;
+  }
+
+  #userStats {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 15px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+/* ปรับขนาดรูปใหญ่ขึ้นเฉพาะกล่องนี้ */
+.bloodshoes-box .icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.bloodshoes-box .icon-inline {
+  width: 150px;
+  height: 200px;
+}
+
+
+/* จัดข้อความให้อยู่ด้านล่างลงอีก */
+.bloodshoes-box .text-container {
+  margin-top: 20px;
+}
+/* ปรับขนาดรูปใหญ่ขึ้นเฉพาะกล่องนี้ */
+.warzone-box .icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.warzone-box .icon-inline {
+  width: 200px;
+  height: 200px;
+}
+
+
+/* จัดข้อความให้อยู่ด้านล่างลงอีก */
+.warzone-box .text-container {
+  margin-top: 30px;
+}
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    text-align: center;
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 12px;
+    background: #d6d4d4;
+    color: rgb(19, 1, 100);
+    position: relative;
+    cursor: default;
+  }
+
+  .icon-inline {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 5px;
+    display: block;
+  }
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 130px;
+  margin-bottom: 10px;
+}
+
+.text-container {
+  margin-top: 10px; /* จากเดิมไม่มีหรือเป็น gap แค่นิดเดียว */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+  /* เอฟเฟกต์ sparkle วูปวาปเหมือนเพชร */
+  .diamond-glow {
+    animation: sparkle 1.5s infinite ease-in-out;
+    filter: drop-shadow(0 0 5px pink) drop-shadow(0 0 30px hotpink);
+    transition: transform 0.3s;
+  }
+  .black-effect .icon-inline {
+    filter: drop-shadow(0 0 10px #222);
+    animation: sparkle 3s infinite ease-in-out;
+  }
+  .blue-effect .icon-inline {
+    filter: drop-shadow(0 0 20px #004080);
+    animation: sparkle 3s infinite ease-in-out;
+  }
+ 
+    .orange-effect .icon-inline {
+    filter: drop-shadow(0 0 5px #eccc91) drop-shadow(0 0 12px #FFCC80);
+    animation: sparkle 5s infinite ease-in-out;
+  }
+
+  @keyframes sparkle {
+    0% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.3);
+    }
+    100% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+  #upgradeForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* ระยะห่างระหว่าง input กับ button */
+  margin-top: 20px;
+}
+
+#upgradeForm input[type="text"] {
+  width: 400px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#upgradeForm button {
+  padding: 15px 15px;
+  font-size: 14px;
+  width: 150px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#upgradeForm button:hover {
+  background-color: #0056b3;
+}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+
+  .game-title {
+    font-family: 'Orbitron', 'Russo One', 'Arial Black', sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    color: #000000; /* สีส้มอ่อน */
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow:
+    
+      0 0 30px #506aff;
+    user-select: none;
+    margin-bottom: 1rem;
+  }
+  .right-box {
+  position: absolute;
+  top: 950px; /* ปรับตำแหน่งจากด้านบน */
+  right: 20px; /* ชิดขวา 20px */
+  width: 370px;
+  background: rgba(255, 158, 158, 0.8);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00000050;
+  font-size: 14px;
+  color: #660000;
+}
+
+</style>
+
+</head>
+<body>
+
+<h2 class="game-title">N-AGE WARZONE UPGRADE </h2>
+
+<div class="tabs">
+  <button id="btnRegister">สมัครสมาชิก</button>
+  <button id="btnLogin" class="active">เข้าสู่ระบบ</button>
+  <button id="btnUpgrade" style="display:none;">อัพเกรดไอเท็ม</button>
+</div>
+
+<button id="logoutBtn">ออกจากระบบ</button>
+
+
+
+
+<div id="userStats">
+  <div class="stat-box">
+    <div class="icon-container">
+      <img
+        src="https://img5.pic.in.th/file/secure-sv1/pngtree-red-ruby-diamond-png-image_2614290-removebg-preview-1---.png"
+        alt="เพชร"
+        class="icon-inline diamond-glow"
+      />
+    </div>
+    <div class="text-container">
+      <strong>Pemto Spectrum</strong>
+      <div id="tokenCount"></div>
+      <div style="text-align: center;">
+  <button id="btnAddPemto" style="margin-top: 10px; padding: 6px 12px; font-size: 14px; cursor: pointer;">
+    ซื้อ Pemto! (200 POINT)
+  </button>
+</div>
+  <strong> 
+   รับ Pemto แล้วตอนรี : <span id="relevel"></span>
+   </strong>
+   </div>
+  </div>
+
+ <div class="stat-box black-effect">
+  <div class="icon-container">
+    <img
+      id="itemImage"
+      src="https://img5.pic.in.th/file/secure-sv1/image_2025-05-21_025732383-removebg-preview.png"
+      alt="item"
+      class="icon-inline"
+    />
+  </div>
+
+  <label for="upgradeItem">เลือกไอเท็ม:</label>
+  <select id="upgradeItem" name="item" required>
+    <option value="topgm">ปลอก TOPGM</option>
+    <option value="warshoes">รองเท้า Warrior</option>
+
+  </select>
+
+  <div class="text-container">
+    <strong id="itemLabel">Devil Angel God TopGm</strong>
+
+    <div id="topgmContainer">
+      <div><span id="topgmCount">0</span></div>
+    </div>
+
+
+  <div id="warshoesContainer" style="display:none;">
+  <div><span id="warshoes">0</span></div>
+</div>
+
+   <div style="text-align: center;">
+  <button id="btnAddTopgm" style="margin-top: 5px; padding: 8px 10px; font-size: 12px; cursor: pointer;">
+  ดึง ปลอกTOPGM (50 POINT)
+</button>
+<button id="btnAddWarshoes" style="margin-top: 5px; padding: 8px 10px; font-size: 13px; cursor: pointer; display:none;">
+  ดึง Warrior Shoes (50 POINT)
+</button>
+
+</div>
+
+  </div>
+</div>
+
+
+
+  <div class="stat-box blue-effect warzone-box">
+    <div class="icon-container">
+      <img
+        src="https://img2.pic.in.th/pic/image_2025-05-21_025140493-removebg-preview.png"
+        alt="warzone"
+        class="icon-inline"
+      />
+    </div>
+    <div class="text-container">
+      <strong>WARZONE S.GOD+7</strong>
+      <div id="warzoneCount"></div>
+    </div>
+  </div>
+
+ <div class="stat-box blue-effect bloodshoes-box">
+  <div class="icon-container">
+    <img
+      src="https://img5.pic.in.th/file/secure-sv1/7bb925bc-e6b8-4e08-879b-d57ced628903_removalai_preview.png"
+      alt="bloodshoes"
+      class="icon-inline"
+    />
+  </div>
+  <div class="text-container">
+    <strong>Blood Shoes +7</strong>
+    <div id="bloodshoes"></div>
+  </div>
+</div>
+
+
+
+  <div class="stat-box orange-effect">
+    <div class="icon-container">
+      <img
+        src="https://img2.pic.in.th/pic/32ad49ab-33b7-49b9-8473-f880f07d1fa3.png"
+        alt="point"
+        class="icon-inline"
+      />
+    </div>
+    <div class="text-container">
+      <strong>POINT</strong>
+      <div id="POINT"></div>
+      <strong>MONEY</strong>
+      <div id="money">
+  <span id="money-value">0</span><strong> M</strong>
+</div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+<!-- ปุ่มแยกอยู่ด้านล่าง -->
+
+</div>
+<div id="register" class="tab-content">
+  <form id="registerForm">
+    <input type="text" id="regUsername" placeholder="Username" required autocomplete="username" />
+    <input type="password" id="regPassword" placeholder="Password" required autocomplete="new-password" />
+    <input type="password" id="regConfirmPassword" placeholder="ยืนยันรหัสผ่าน" required autocomplete="new-password" />
+    <button type="submit">สมัครสมาชิก</button>
+    <p id="registerResult"></p>
+  </form>
+</div>
+
+<div id="login" class="tab-content active">
+  <form id="loginForm">
+    <input type="text" id="loginUsername" placeholder="Username" required autocomplete="username" />
+    <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password" />
+    <button type="submit">เข้าสู่ระบบ</button>
+    <p id="loginResult"></p>
+  </form>
+</div>
+
+<div id="upgrade" class="tab-content">
+  <form id="upgradeForm">
+
+    <!-- ย้ายขึ้นด้านบน -->
+    <div class="top-form">
+      <input type="text" id="upgradeName" placeholder="ชื่อตัวละคร" required autocomplete="off" />
+      <button type="submit" id="upgradeButton">อัพเกรดไอเท็ม</button>
+    </div>
+
+    <!-- อยู่ล่าง -->
+    <div class="right-box">
+      โอกาศอัพเกรด  สำเร็จ  25%  ล้มเหลว  40%   สูญหาย(แตก) 35%
+    </div>
+
+    <p id="upgradeResult"></p>
+  </form>
+</div>
+
+
+<script>
+ const itemImage = document.getElementById('itemImage');
+const itemLabel = document.getElementById('itemLabel');
+const upgradeItem = document.getElementById('upgradeItem');
+
+const btnAddTopgm = document.getElementById('btnAddTopgm');
+const btnAddWarshoes = document.getElementById('btnAddWarshoes');
+
+const itemData = {
+  warshoes: {
+    label: 'Warrior Shoes',
+    img: 'https://img5.pic.in.th/file/secure-sv1/image_2025-04-21_014911992-Photoroom.png',
+    containerId: 'warshoesContainer',
+    button: btnAddWarshoes
+  },
+  topgm: {
+    label: 'Devil Angel God TopGm',
+    img: 'https://img5.pic.in.th/file/secure-sv1/image_2025-05-21_025732383-removebg-preview.png',
+    containerId: 'topgmContainer',
+    button: btnAddTopgm
+  }
+};
+
+function updateItemDisplay() {
+  const selected = upgradeItem.value;
+  const info = itemData[selected];
+
+  // เปลี่ยนภาพและชื่อ
+  itemImage.src = info.img;
+  itemLabel.textContent = info.label;
+
+  // ซ่อนทุก container และปุ่มก่อน
+  Object.values(itemData).forEach(item => {
+    const container = document.getElementById(item.containerId);
+    if (container) container.style.display = 'none';
+
+    if (item.button) item.button.style.display = 'none';
+  });
+
+  // แสดงเฉพาะ container และปุ่มของไอเท็มที่เลือก
+  const targetContainer = document.getElementById(info.containerId);
+  if (targetContainer) targetContainer.style.display = 'block';
+
+  if (info.button) info.button.style.display = 'inline-block';
+}
+
+// เรียกตอนโหลดหน้าและตอนเปลี่ยน select
+window.addEventListener('DOMContentLoaded', updateItemDisplay);
+upgradeItem.addEventListener('change', updateItemDisplay);
+
+
+
+  let loggedInUser = null;
+  let loggedInPass = null;
+ const apiURL = 'https://testupgrade.onrender.com/proxy';
+  // ฟังก์ชันเปลี่ยนแท็บ
+  function switchTab(tabName) {
+  // ซ่อนเนื้อหาทุกแท็บ
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  // แสดงเนื้อหาของแท็บที่เลือก
+  document.getElementById(tabName).classList.add('active');
+
+  // รีเซ็ตปุ่มแท็บทั้งหมด
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btnRegister').classList.remove('active');
+  document.getElementById('btnLogin').classList.remove('active');
+  document.getElementById('btnUpgrade').classList.remove('active');
+
+  // ตั้งสถานะ active ให้ปุ่มแท็บที่เลือก
+  if (tabName === 'register') {
+    document.getElementById('btnRegister').classList.add('active');
+  } else if (tabName === 'login') {
+    document.getElementById('btnLogin').classList.add('active');
+  } else if (tabName === 'upgrade') {
+    document.getElementById('btnUpgrade').classList.add('active');
+  }
+
+  // ควบคุมการแสดงผล userStats และปุ่มดึงไอเท็มกลับ (ถ้ามี)
+  const userStats = document.getElementById('userStats');
+  const btnAddTopgm = document.getElementById('btnAddTopgm');
+  const btnAddPemto = document.getElementById('btnAddPemto');
+
+  if (tabName === 'upgrade' && loggedInUser && loggedInPass) {
+    userStats.style.display = 'flex'; // หรือ 'block' ถ้าคุณออกแบบแบบนั้น
+    if (btnAddTopgm) btnAddTopgm.style.display = 'inline-block';
+    if (btnAddPemto) btnAddPemto.style.display = 'inline-block';
+
+  } else {
+    userStats.style.display = 'none';
+    if (btnAddTopgm) btnAddTopgm.style.display = 'none';
+    if (btnAddPemto) btnAddPemto.style.display = 'none';
+
+  }
+}
+
+document.getElementById('btnRegister').onclick = () => switchTab('register');
+document.getElementById('btnLogin').onclick = () => switchTab('login');
+document.getElementById('btnUpgrade').onclick = () => switchTab('upgrade');
+
+document.getElementById('logoutBtn').onclick = () => {
+  localStorage.removeItem('username');
+  localStorage.removeItem('password');
+  loggedInUser = null;
+  loggedInPass = null;
+
+  document.getElementById('userStats').style.display = 'none';
+  document.getElementById('btnUpgrade').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
+
+  const btnAddTopgm = document.getElementById('btnAddTopgm');
+  if (btnAddTopgm) btnAddTopgm.style.display = 'none';
+   const btnAddpemto = document.getElementById('btnAddpemto');
+  if (btnAddpemto) btnAddpemto.style.display = 'none';
+
+  switchTab('login');
+};
+
+async function loadUserStats() {
+  try {
+    const res = await fetch(apiURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'userinfo', username: loggedInUser, password: loggedInPass })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('tokenCount').textContent = data.token;
+      document.getElementById('topgmCount').textContent = data.topgm;
+      document.getElementById('warshoes').textContent = data.warshoes;
+      document.getElementById('warzoneCount').textContent = data.warzone;
+      document.getElementById('bloodshoes').textContent = data.bloodshoes;
+      document.getElementById('POINT').textContent = data.point || 0;
+      document.getElementById('money-value').textContent = data.money || 0;
+      document.getElementById('relevel').textContent = data.relevel || 0;
+      document.getElementById('userStats').style.display = 'flex';
+    } else {
+      // ถ้า API ไม่ผ่าน เช่นข้อมูลผู้ใช้ผิดพลาด
+      alert('ไม่สามารถโหลดข้อมูลผู้ใช้ได้');
+      document.getElementById('userStats').style.display = 'none';
+    }
+  } catch (error) {
+    console.error('Error loading user stats:', error);
+    alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+  }
+}
+
+// โหลดผู้ใช้จาก localStorage ถ้ามี
+window.addEventListener('DOMContentLoaded', async () => {
+  const user = localStorage.getItem('username');
+  const pass = localStorage.getItem('password');
+  if (user && pass) {
+    loggedInUser = user;
+    loggedInPass = pass;
+    document.getElementById('btnUpgrade').style.display = 'inline-block';
+    document.getElementById('logoutBtn').style.display = 'inline-block';
+    switchTab('upgrade');
+    await loadUserStats();
+  } else {
+    switchTab('login');
+  }
+});
+  // ฟอร์มล็อกอิน
+  document.getElementById('loginForm').onsubmit = async e => {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const resultP = document.getElementById('loginResult');
+
+    const res = await fetch(apiURL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ action: 'login', username, password })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      loggedInUser = username;
+      loggedInPass = password;
+      localStorage.setItem('username', username);
+      localStorage.setItem('password', password);
+      resultP.style.color = 'green';
+      resultP.textContent = 'เข้าสู่ระบบสำเร็จ!';
+      document.getElementById('btnUpgrade').style.display = 'inline-block';
+      document.getElementById('logoutBtn').style.display = 'inline-block';
+      switchTab('upgrade');
+      await loadUserStats();
+    } else {
+      resultP.style.color = 'red';
+      resultP.textContent = data.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+    }
+  };
+
+  // ฟอร์มสมัครสมาชิก
+  document.getElementById('registerForm').onsubmit = async e => {
+    e.preventDefault();
+    const username = document.getElementById('regUsername').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const confirmPassword = document.getElementById('regConfirmPassword').value;
+    const resultP = document.getElementById('registerResult');
+
+    if (password !== confirmPassword) {
+      resultP.style.color = 'red';
+      resultP.textContent = 'รหัสผ่านไม่ตรงกัน';
+      return;
+    }
+
+    const res = await fetch(apiURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'register', username, password })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      resultP.style.color = 'green';
+      resultP.textContent = 'สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ';
+      // ล้างฟอร์ม
+      document.getElementById('registerForm').reset();
+      switchTab('login');
+    } else {
+      resultP.style.color = 'red';
+      resultP.textContent = data.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก';
+    }
+  };
+  
+  // ฟังก์ชันแสดงแจ้งเตือนอัพเกรด
+  function showUpgradeNotification(message, color) {
+  const notify = document.createElement('div');
+  notify.textContent = message;
+  notify.style.position = 'fixed';
+  notify.style.top = '20px';
+  notify.style.left = '50%';
+  notify.style.transform = 'translateX(-50%)';
+  notify.style.backgroundColor = color;
+  notify.style.color = 'white';
+  notify.style.padding = '10px 20px';
+  notify.style.borderRadius = '8px';
+  notify.style.fontWeight = 'bold';
+  notify.style.zIndex = 9999;
+  document.body.appendChild(notify);
+  setTimeout(() => document.body.removeChild(notify), 5000);
+}
+
+
+  // ฟอร์มอัพเกรดไอเท็ม
+  document.getElementById('upgradeForm').onsubmit = async e => {
+    e.preventDefault();
+    const name = document.getElementById('upgradeName').value.trim(); // ✅ เพิ่มตรงนี้
+    const item = document.getElementById('upgradeItem').value;
+    const resultP = document.getElementById('upgradeResult');
+    const upgradeButton = document.getElementById('upgradeButton');
+    const originalButtonText = upgradeButton.textContent;
+
+    if (!name) {
+      alert('กรุณากรอกชื่อตัวละครก่อน');
+      return;
+    }
+    if (!loggedInUser || !loggedInPass) {
+      alert('กรุณาเข้าสู่ระบบก่อน');
+      switchTab('login');
+      return;
+    }
+
+    // แสดงสถานะกำลังทำงาน
+    upgradeButton.textContent = 'กำลังรวมอุปกรณ์...';
+    upgradeButton.disabled = true;
+
+    resultP.innerHTML = `
+      <div style="text-align: center;">
+        <img src="https://img2.pic.in.th/pic/image_2025-05-21_180926572.png" 
+             alt="กำลังอัปเกรด" 
+             style="width: 400px; margin-top: 10px;">
+      </div>
+    `;
+
+    // รอ 3 วินาที (จำลองเวลาทำงาน)
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // เรียก API อัพเกรด
+    const res = await fetch(apiURL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ action: 'upgrade', username: loggedInUser, password: loggedInPass, name, item })
+  });
+
+  const data = await res.json();
+
+ if (data.success) {
+  const params = new URLSearchParams();
+  params.append('name', name);      // ชื่อที่ได้จาก input
+  params.append('result', data.result);
+  params.append('item', item);      // เพิ่มตรงนี้ ส่งไอเท็มไปด้วย
+
+
+  fetch('https://script.google.com/macros/s/AKfycbwmdI1G3xsAs-IiduZn8BCmymgSP8Ph6PVcjX90Xw_M9vT4r3-F2K-OY9iP-7UrnOFg/exec', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: params.toString()
+  })
+  .then(res => res.status === 204 ? null : res.json())
+  .then(data => console.log('Discord ส่งแล้ว:', data))
+  .catch(err => console.error('ส่ง Discord ไม่ได้:', err));
+
+  // --- แสดงผล UI ---
+  let color, message, imageURL;
+  switch(data.result) {
+    case "สำเร็จ":
+      color = 'darkgreen';
+      message = 'อัปเกรดสำเร็จ! 🎉 คุณได้รับไอเท็มใหม่แล้ว';
+      imageURL = 'https://img2.pic.in.th/pic/Screenshot-2025-05-21-023115.png';
+        // เรียกแจ้งเตือนแยกไอเท็ม
+  showUpgradeNotification(message, color, item);
+
+      break;
+    case "ล้มเหลว":
+      color = '#cc6600';
+      message = 'อัปเกรดล้มเหลว! ขอให้โชคดีครั้งหน้า';
+      imageURL = 'https://img5.pic.in.th/file/secure-sv1/18a5fd9683439dec252c4ed8898ad9c4.png';
+      break;
+    case "แตก":
+      color = 'red';
+      message = 'ไอเท็มถูกทำลาย !!';
+      imageURL = 'https://img2.pic.in.th/pic/Screenshot-2025-05-21-023244.png';
+      break;
+    default:
+      color = 'blue';
+      message = data.result;
+      imageURL = '';
+  }
+
+  const resultP = document.getElementById('upgradeResult');
+  resultP.style.color = color;
+  resultP.style.textAlign = 'center';
+  resultP.innerHTML = imageURL 
+    ? `<img src="${imageURL}" alt="${data.result}" style="width: 400px; margin-top: 10px;">`
+    : '';
+
+  showUpgradeNotification(message, color, item);
+  await loadUserStats(); // ✅ ต้องอยู่ใน async function
+}
+
+
+
+   else {
+    resultP.style.color = 'red';
+    resultP.style.textAlign = 'left';
+    resultP.textContent = data.message || 'เกิดข้อผิดพลาดในการอัปเกรด';
+  }
+
+  // คืนค่าปุ่มเดิม
+  upgradeButton.textContent = originalButtonText;
+  upgradeButton.disabled = false;
+};
+
+
+
+// แก้ฟังก์ชันแจ้งเตือนให้รับสี และ item เพื่อตรวจสอบแสดงรูป
+function showUpgradeNotification(message, color = '#155724', item = '') {
+  let notifyDiv = document.getElementById('upgradeNotification');
+
+  if (!notifyDiv) {
+    notifyDiv = document.createElement('div');
+    notifyDiv.id = 'upgradeNotification';
+    notifyDiv.style.padding = '15px 25px';
+    notifyDiv.style.borderRadius = '10px';
+    notifyDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    notifyDiv.style.zIndex = '1000';
+    notifyDiv.style.textAlign = 'center';
+    notifyDiv.style.maxWidth = '320px';
+    notifyDiv.style.whiteSpace = 'normal';
+    notifyDiv.style.wordWrap = 'break-word';
+    notifyDiv.style.position = 'fixed';
+    notifyDiv.style.top = '20px';
+    notifyDiv.style.left = '50%';
+    notifyDiv.style.transform = 'translateX(-50%)';
+    document.body.appendChild(notifyDiv);
+  }
+
+  notifyDiv.innerHTML = '';
+
+  // เลือกรูปตามไอเท็มและสี
+  if (color === 'darkgreen') {
+    const img = document.createElement('img');
+    if (item.toLowerCase() === 'topgm') {
+      img.src = 'https://img5.pic.in.th/file/secure-sv1/image_2025-05-21_025140493-removebg-preview.png';  // รูปสำหรับ warzone
+      img.alt = 'สำเร็จ - Warzone';
+    } else if (item.toLowerCase() === 'warshoes') {
+      img.src = 'https://img5.pic.in.th/file/secure-sv1/7bb925bc-e6b8-4e08-879b-d57ced628903_removalai_preview.png';  // รูปสำหรับ bloodshoes (เปลี่ยนเป็นรูปที่ต้องการ)
+      img.alt = 'สำเร็จ - Blood Shoes';
+    }
+    img.style.width = '200px';
+    img.style.height = '200px';
+    img.style.display = 'block';
+    img.style.margin = '0 auto 10px auto';
+    notifyDiv.appendChild(img);
+  }
+
+  const textNode = document.createElement('div');
+  textNode.textContent = message;
+  notifyDiv.appendChild(textNode);
+
+  // ตั้งค่าสีพื้นหลังและขอบ ตามสีที่ส่งมา
+  if (color === 'darkgreen') {
+    notifyDiv.style.backgroundColor = '#d4edda';
+    notifyDiv.style.color = '#155724';
+    notifyDiv.style.border = '1px solid #c3e6cb';
+  } else if (color === '#cc6600') {
+    notifyDiv.style.backgroundColor = '#ffdb99';
+    notifyDiv.style.color = '#b35900';
+    notifyDiv.style.border = '1px solid #d18c1a';
+  } else if (color === 'red') {
+    notifyDiv.style.backgroundColor = '#f8d7da';
+    notifyDiv.style.color = '#721c24';
+    notifyDiv.style.border = '1px solid #f5c6cb';
+  } else if (color === 'blue') {
+    notifyDiv.style.backgroundColor = '#cce5ff';
+    notifyDiv.style.color = '#004085';
+    notifyDiv.style.border = '1px solid #b8daff';
+  } else {
+    notifyDiv.style.backgroundColor = '#d4edda';
+    notifyDiv.style.color = '#155724';
+    notifyDiv.style.border = '1px solid #c3e6cb';
+  }
+
+  setTimeout(() => {
+    if (notifyDiv) notifyDiv.remove();
+  }, 10000);
+}
+
+
+  // ปุ่มเพิ่ม TOPGM โดยใช้ 50 POINT
+  document.getElementById('btnAddTopgm').onclick = async () => {
+ const name = document.getElementById('upgradeName').value.trim(); // ✅ เพิ่มตรงนี้   
+ const item = document.getElementById('upgradeItem').value;
+
+  if (!name) {
+    alert('กรุณากรอกชื่อตัวละครก่อน');
+    return;
+  }
+
+  if (!confirm('ต้องการใช้ POINT 50 เพื่อดึงไอเท็ม TOPGM กลับมา (กรณีแตก) ใช่หรือไม่?')) return;
+
+  const res = await fetch(apiURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'usepoint',
+      username: loggedInUser,
+      password: loggedInPass,
+      name,
+    })
+  });
+
+  const data = await res.json();
+  if (data.success) {
+    alert(data.message || 'ดึงไอเท็มกลับสำเร็จ');
+    await loadUserStats();
+  } else {
+    alert(data.message || 'ไม่สามารถดึงไอเท็มได้');
+  }
+};
+
+
+// ปุ่มเพิ่ม warshoes โดยใช้ 50 POINT
+  document.getElementById('btnAddWarshoes').onclick = async () => {
+  const name = document.getElementById('upgradeName').value.trim(); // ✅ เพิ่มตรงนี้
+  const item = document.getElementById('upgradeItem').value;
+  if (!name) {
+    alert('กรุณากรอกชื่อตัวละครก่อน');
+    return;
+  }
+
+  if (!confirm('ต้องการใช้ POINT 50 เพื่อดึงไอเท็ม Warrior shoes กลับมา (กรณีแตก) ใช่หรือไม่?')) return;
+
+  const res = await fetch(apiURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'usepoint1',
+      username: loggedInUser,
+      password: loggedInPass,
+      name,
+    })
+  });
+
+  const data = await res.json();
+  if (data.success) {
+    alert(data.message || 'ดึงไอเท็มกลับสำเร็จ');
+    await loadUserStats();
+  } else {
+    alert(data.message || 'ไม่สามารถดึงไอเท็มได้');
+  }
+};
+
+//ซื้อ PEMTO
+document.addEventListener('DOMContentLoaded', () => {
+  const btnAddPemto = document.getElementById('btnAddPemto');
+
+  if (btnAddPemto) {
+    btnAddPemto.onclick = async () => {
+      if (!loggedInUser || !loggedInPass) {
+        alert('กรุณาเข้าสู่ระบบก่อนทำรายการ');
+        return;
+      }
+
+      const confirmBuy = confirm('ต้องการใช้ POINT 200 เพื่อซื้อไอเท็ม Pemto Spectrum ใช่หรือไม่?');
+      if (!confirmBuy) return;
+
+      try {
+        const res = await fetch(apiURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'buypemto',
+            username: loggedInUser,
+            password: loggedInPass,
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          alert(data.message || 'ซื้อ Pemto Spectrum สำเร็จ');
+          await loadUserStats();
+        } else {
+          alert(data.message || 'ไม่สามารถซื้อไอเท็มได้');
+        }
+      } catch (err) {
+        console.error('เกิดข้อผิดพลาด:', err);
+        alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์');
+      }
+    };
+  }
+});
+
+
+</script>
+
+</body>
+</html>
