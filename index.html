@@ -190,9 +190,9 @@
   }
   .right-box {
   position: absolute;
-  top: 950px; /* ปรับตำแหน่งจากด้านบน */
+  top: 850px; /* ปรับตำแหน่งจากด้านบน */
   right: 20px; /* ชิดขวา 20px */
-  width: 370px;
+  width: 360px;
   background: rgba(255, 158, 158, 0.8);
   padding: 15px;
   border-radius: 10px;
@@ -268,6 +268,7 @@
 
 
   <div id="warshoesContainer" style="display:none;">
+    
   <div><span id="warshoes">0</span></div>
 </div>
 
@@ -370,7 +371,9 @@
 
     <!-- อยู่ล่าง -->
     <div class="right-box">
-      โอกาศอัพเกรด  สำเร็จ  25%  ล้มเหลว  40%   สูญหาย(แตก) 35%
+   *******************โอกาศอัพเกรด*******************
+    <br> Warzone +7 สำเร็จ  25%  ล้มเหลว  40%   สูญหาย(แตก) 35%
+    <br> bloodshoes +7 สำเร็จ  5%  ล้มเหลว  60%   สูญหาย(แตก) 35%
     </div>
 
     <p id="upgradeResult"></p>
@@ -643,25 +646,46 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // แสดงสถานะกำลังทำงาน
     upgradeButton.textContent = 'กำลังรวมอุปกรณ์...';
-    upgradeButton.disabled = true;
+upgradeButton.disabled = true;
 
-    resultP.innerHTML = `
-      <div style="text-align: center;">
-        <img src="https://img2.pic.in.th/pic/image_2025-05-21_180926572.png" 
-             alt="กำลังอัปเกรด" 
-             style="width: 400px; margin-top: 10px;">
-      </div>
-    `;
+// เลือกรูปตาม item
+let upgradeImageURL = '';
+switch (item) {
+  case 'warshoes':
+    upgradeImageURL = 'https://img2.pic.in.th/pic/-6-Photoroom1e4ac320ba1839ed.png';
+    break;
+  case 'topgm':
+    upgradeImageURL = 'https://img5.pic.in.th/file/secure-sv1/-5-Photoroom-Photoroom-Photoroom.png';
+    break;
+  case 'bloodshoes':
+    upgradeImageURL = 'https://img2.pic.in.th/pic/bloodshoes.png';
+    break;
+  case 'warzone':
+    upgradeImageURL = 'https://img2.pic.in.th/pic/warzone.png';
+    break;
+  default:
+    upgradeImageURL = 'https://img2.pic.in.th/pic/image_2025-05-21_180926572.png'; // รูปเริ่มต้น
+}
 
-    // รอ 3 วินาที (จำลองเวลาทำงาน)
-    await new Promise(resolve => setTimeout(resolve, 3000));
+// แสดงผลลัพธ์พร้อมรูปภาพที่ตรงกับไอเท็ม
+resultP.innerHTML = `
+  <div style="text-align: center;">
+    <img src="${upgradeImageURL}" 
+         alt="กำลังอัปเกรด" 
+         style="width: 400px; margin-top: 10px;">
+  </div>
+`;
 
-    // เรียก API อัพเกรด
-    const res = await fetch(apiURL, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ action: 'upgrade', username: loggedInUser, password: loggedInPass, name, item })
-  });
+// รอ 3 วินาที (จำลองเวลาทำงาน)
+await new Promise(resolve => setTimeout(resolve, 3000));
+
+// เรียก API อัพเกรด
+const res = await fetch(apiURL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ action: 'upgrade', username: loggedInUser, password: loggedInPass, name, item })
+});
+
 
   const data = await res.json();
 
@@ -689,7 +713,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     case "สำเร็จ":
       color = 'darkgreen';
       message = 'อัปเกรดสำเร็จ! 🎉 คุณได้รับไอเท็มใหม่แล้ว';
-      imageURL = 'https://img2.pic.in.th/pic/Screenshot-2025-05-21-023115.png';
+      imageURL = 'https://img5.pic.in.th/file/secure-sv1/-3-Photoroom930bf5cc034a99d3.png';
         // เรียกแจ้งเตือนแยกไอเท็ม
   showUpgradeNotification(message, color, item);
 
@@ -697,12 +721,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     case "ล้มเหลว":
       color = '#cc6600';
       message = 'อัปเกรดล้มเหลว! ขอให้โชคดีครั้งหน้า';
-      imageURL = 'https://img5.pic.in.th/file/secure-sv1/18a5fd9683439dec252c4ed8898ad9c4.png';
+      imageURL = 'https://img5.pic.in.th/file/secure-sv1/-4-Photorooma1fbd87a66bd28f2.png';
       break;
     case "แตก":
       color = 'red';
       message = 'ไอเท็มถูกทำลาย !!';
-      imageURL = 'https://img2.pic.in.th/pic/Screenshot-2025-05-21-023244.png';
+      imageURL = 'https://img2.pic.in.th/pic/-2-Photoroom016935b512d6c8d4.png';
       break;
     default:
       color = 'blue';
