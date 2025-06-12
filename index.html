@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-   <link rel="icon" href="https://img2.pic.in.th/pic/image_2025-05-21_025140493-removebg-preview.png" type="image/png">
   <meta charset="UTF-8" />
   <title>N-AGE WARZONE UPGRADE</title>
   <style>
@@ -332,7 +331,13 @@
       <strong>MONEY</strong>
       <div id="money">
   <span id="money-value">0</span><strong> M</strong>
-</div>
+  </div>
+  <label for="upgradeMethod">เลือกค่าอัพเกรด:</label>
+<select id="upgradeMethod">
+  <option value="money">ใช้ 2000M</option>
+  <option value="point">ใช้ 50 Point</option>
+</select>
+
     </div>
   </div>
 </div>
@@ -386,9 +391,11 @@
  const itemImage = document.getElementById('itemImage');
 const itemLabel = document.getElementById('itemLabel');
 const upgradeItem = document.getElementById('upgradeItem');
-
 const btnAddTopgm = document.getElementById('btnAddTopgm');
 const btnAddWarshoes = document.getElementById('btnAddWarshoes');
+const upgradeItemSelect = document.getElementById('upgradeItem');
+  const upgradeMethodLabel = document.querySelector('label[for="upgradeMethod"]');
+  const upgradeMethodSelect = document.getElementById('upgradeMethod');
 
 const itemData = {
   warshoes: {
@@ -631,7 +638,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     const name = document.getElementById('upgradeName').value.trim(); // ✅ เพิ่มตรงนี้
     const item = document.getElementById('upgradeItem').value;
-    const resultP = document.getElementById('upgradeResult');
+    const method = document.getElementById('upgradeMethod').value;
+     const resultP = document.getElementById('upgradeResult');
     const upgradeButton = document.getElementById('upgradeButton');
     const originalButtonText = upgradeButton.textContent;
 
@@ -684,7 +692,7 @@ await new Promise(resolve => setTimeout(resolve, 3000));
 const res = await fetch(apiURL, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ action: 'upgrade', username: loggedInUser, password: loggedInPass, name, item })
+  body: JSON.stringify({ action: 'upgrade', username: loggedInUser, password: loggedInPass, name, item,method })
 });
 
 
@@ -940,7 +948,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+function updateUpgradeMethodVisibility() {
+    const selectedItem = upgradeItemSelect.value;
+    const isWarshoes = selectedItem === 'warshoes';
 
+    // ซ่อนหรือแสดง label และ select ของวิธีอัปเกรด
+    upgradeMethodLabel.style.display = isWarshoes ? 'inline-block' : 'none';
+    upgradeMethodSelect.style.display = isWarshoes ? 'inline-block' : 'none';
+
+    // ซ่อน/แสดงปุ่มตามไอเท็ม
+    document.getElementById('btnAddTopgm').style.display = selectedItem === 'topgm' ? 'inline-block' : 'none';
+    document.getElementById('btnAddWarshoes').style.display = selectedItem === 'warshoes' ? 'inline-block' : 'none';
+  }
+
+  // เรียกครั้งแรกตอนโหลดหน้า
+  updateUpgradeMethodVisibility();
+
+  // เปลี่ยน dropdown แล้วอัปเดตใหม่
+  upgradeItemSelect.addEventListener('change', updateUpgradeMethodVisibility);
 </script>
 
 </body>
