@@ -63,6 +63,7 @@
           <th>warzone</th>
           <th>bloodshoes</th>
           <th>relevel</th>
+          <th>buypemtoCount</th>
           <th>Actions</th>
   
         </tr>
@@ -244,6 +245,7 @@ window.onload = () => {
               <td><input type="number" min="0" value="${user.warzone || 0}" data-field="warzone" /></td>   
               <td><input type="number" min="0" value="${user.bloodshoes || 0}" data-field="bloodshoes" /></td>
               <td><input type="number" min="0" value="${user.relevel || 0}" data-field="relevel" /></td>
+              <td><input type="number" min="0" value="${user.buypemtoCount || 0}" data-field="buypemtoCount" /></td>
             
               <td><button onclick="saveUser('${user.username}', this)">Save</button></td>
             `;
@@ -270,6 +272,7 @@ window.onload = () => {
     const bloodshoes = parseInt(tr.querySelector('input[data-field="bloodshoes"]').value);
     const relevel = parseInt(tr.querySelector('input[data-field="relevel"]').value);
     const money = parseInt(tr.querySelector('input[data-field="money"]').value);
+    const buypemtoCount = parseInt(tr.querySelector('input[data-field="buypemtoCount"]').value);
     fetch(apiURL + '/admin/updateUser', {
   method: 'POST',
   headers: {
@@ -278,7 +281,7 @@ window.onload = () => {
   },
   body: JSON.stringify({
     username,
-    fields: { password, token, point, topgm, warzone, warshoes, bloodshoes, relevel, money }
+    fields: { password, token, point, topgm, warzone, warshoes, bloodshoes, relevel, money ,buypemtoCount }
   })
 })
 .then(res => res.json())
